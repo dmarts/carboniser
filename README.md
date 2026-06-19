@@ -19,9 +19,13 @@ If you're generating or storing your own power at home (solar / battery) then th
 Download the latest `.zip` file from the 'Releases' page, extract it, and drag to your Applications folder.
 
 ### Configure
-Choose your region from the dropdown.  The app doesn't do any geolocation (yet!).
+Choose your region from the dropdown.  The app doesn't do any geolocation (yet!).  To find your (rough) location, [this](https://api.neso.energy/dataset/bf3d723b-b4ae-4ec7-9fc9-e584c651a9da/resource/1d817f4c-a126-45c8-baf0-218bf57d37be/download/neso-ci-regional-methodology_v2.pdf) might help:
 
-If you don't get any popup alerts, you may need to enable them in your System Settings.
+<img width="587" height="807" alt="image" src="https://github.com/user-attachments/assets/629503f9-1999-43c2-9b26-1df7d34858de" />
+
+
+
+If you don't get any popup alerts on your device, you may need to enable them in your System Settings by allowing notifications from carboniser.
 
 ### Use
 If you're alerted to do so, consider unplugging your power adapter.  Similarly if you see a leaf icon, it could be a good time to run energy-intensive but time-insensitive things like the dishwasher or washing.
