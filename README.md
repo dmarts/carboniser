@@ -1,5 +1,7 @@
 # carboniser (UK Carbon Intensity utility)
 
+<img width="300" height="338" alt="image" src="https://github.com/user-attachments/assets/99fecc40-b34d-4a54-a2ad-8acd3a4f2cc2" />
+
 ## What is?
 Carboniser is a simple macos app, inspired by a feature on [octopus.energy](https://octopus.energy/).  It runs in your status bar and tells you the current 'carbon intensity' in your UK region.  If conditions are met, it suggests you disconnect mains/grid power for a while - it does this if:
 - Your battery is quite full
