@@ -17,5 +17,10 @@ Download the latest `.zip` file from the 'Releases' page, extract it, and drag t
 ### Configure
 Choose your region from the dropdown.  The app doesn't do any geolocation (yet!).
 
+If you don't get any popup alerts, you may need to enable them in your System Settings.
+
 ### Use
 If you're alerted to do so, consider unplugging your power adapter.  Similarly if you see a leaf icon, it could be a good time to run energy-intensive but time-insensitive things like the dishwasher or washing.
+
+## Contribute
+Pull requests or suggestions are always welcome.
