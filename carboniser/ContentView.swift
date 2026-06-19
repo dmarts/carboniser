@@ -5,38 +5,48 @@ struct ContentView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-                    Text("Carbon Intensity: \(manager.currentIndex.capitalized)")
-                        .font(.headline)
-                    
-                    Divider()
-                    
-                    Picker("Region", selection: $manager.selectedRegionID) {
-                        ForEach(manager.regions.keys.sorted(), id: \.self) { key in
-                            Text(manager.regions[key] ?? "Unknown").tag(key)
-                        }
-                    }
-                    .pickerStyle(.menu)
-                    
-                    Divider()
-                    
-                    // --- NEW DEBUG BUTTON ---
-                    Button("Debug: Force Test Conditions") {
-                        manager.forceTestConditions()
-                    }
-                    // ------------------------
-                    
-                    Button("Refresh Now") {
-                        manager.fetchIntensity()
-                    }
-                    .keyboardShortcut("r", modifiers: .command)
-                    
-                    Button("Quit") {
-                        NSApplication.shared.terminate(nil)
-                    }
-                    .keyboardShortcut("q", modifiers: .command)
+            Text("Carbon Intensity: \(manager.currentIndex.capitalized)")
+                .font(.headline)
+            
+            Text("Power status: \(manager.isPluggedIn ? "Connected to grid power" : "Not connected to grid power")")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                
+            Text("Battery level: \(manager.batteryLevel)%")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+            
+            Divider()
+            
+            Picker("Region", selection: $manager.selectedRegionID) {
+                ForEach(manager.regions.keys.sorted(), id: \.self) { key in
+                    Text(manager.regions[key] ?? "Unknown").tag(key)
                 }
+            }
+            .pickerStyle(.menu)
+            
+            Divider()
+            
+            // --- NEW CHECKBOX ---
+            Toggle("Launch at Login", isOn: $manager.launchAtLogin)
+                .toggleStyle(.checkbox)
+            // --------------------
+            
+            Button("Debug: Force Test Conditions") {
+                manager.forceTestConditions()
+            }
+            
+            Button("Refresh Now") {
+                manager.refreshData()
+            }
+            .keyboardShortcut("r", modifiers: .command)
+            
+            Button("Quit") {
+                NSApplication.shared.terminate(nil)
+            }
+            .keyboardShortcut("q", modifiers: .command)
+        }
         .padding()
-        // Sets a fixed width for the menu dropdown
-        .frame(width: 260)
+        .frame(width: 290)
     }
 }
