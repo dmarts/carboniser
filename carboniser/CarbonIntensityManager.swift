@@ -36,9 +36,13 @@ class CarbonIntensityManager: ObservableObject {
                 }
             }
         }
-    @Published var selectedRegionID: Int = 12 {
-        didSet { refreshData() }
-    }
+    @Published var selectedRegionID: Int = UserDefaults.standard.integer(forKey: "SavedRegion") == 0 ? 12 : UserDefaults.standard.integer(forKey: "SavedRegion") {
+            didSet {
+                // Save the new choice to the Mac's memory
+                UserDefaults.standard.set(selectedRegionID, forKey: "SavedRegion")
+                refreshData()
+            }
+        }
     
     let regions = [
         1: "North Scotland", 2: "South Scotland", 3: "North West England",
