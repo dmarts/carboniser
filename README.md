@@ -19,7 +19,7 @@ If you're generating or storing your own power at home (solar / battery) then th
 Download the latest `.zip` file from the 'Releases' page, extract it, and drag to your Applications folder.
 
 ### Configure
-Choose your region from the dropdown.  The app doesn't do any geolocation (yet!).  To find your (rough) location, [this](https://api.neso.energy/dataset/bf3d723b-b4ae-4ec7-9fc9-e584c651a9da/resource/1d817f4c-a126-45c8-baf0-218bf57d37be/download/neso-ci-regional-methodology_v2.pdf) might help:
+Choose your region from the dropdown.  The app doesn't do any geolocation (yet!).  To find your location, you can check [here](https://carbonintensity.org.uk/) or use [this map](https://api.neso.energy/dataset/bf3d723b-b4ae-4ec7-9fc9-e584c651a9da/resource/1d817f4c-a126-45c8-baf0-218bf57d37be/download/neso-ci-regional-methodology_v2.pdf):
 
 <img width="587" height="807" alt="image" src="https://github.com/user-attachments/assets/629503f9-1999-43c2-9b26-1df7d34858de" />
 
