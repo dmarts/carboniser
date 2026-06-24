@@ -2,6 +2,7 @@ import Foundation
 import UserNotifications
 import Combine
 import ServiceManagement
+import AppKit // Required for NSAlert and NSWorkspace
 
 // MARK: - Notification Delegate
 class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
@@ -16,11 +17,16 @@ struct ForecastRegionData: Codable { let regionid: Int; let shortname: String; l
 struct ForecastPeriod: Codable { let from: String; let to: String; let intensity: IntensityDetail }
 struct IntensityDetail: Codable { let forecast: Int; let index: String }
 
+// MARK: - GitHub Release Model
+struct GitHubRelease: Codable {
+    let tag_name: String
+    let html_url: String
+}
+
 // MARK: - Main Manager
 class CarbonIntensityManager: ObservableObject {
     @Published var currentIndex: String = "unknown"
     
-    // Updated strings
     @Published var currentIntensityDescription: String = "Grid Carbon output: Fetching..."
     @Published var currentNumericDescription: String = ""
     @Published var forecastTrendDescription: String = "Forecast: Fetching..."
@@ -65,6 +71,9 @@ class CarbonIntensityManager: ObservableObject {
         UNUserNotificationCenter.current().delegate = notificationDelegate
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
         startTimer()
+        
+        // Check for updates silently on startup
+        checkForUpdates(manual: false)
     }
 
     func startTimer() {
@@ -156,14 +165,12 @@ class CarbonIntensityManager: ObservableObject {
             }
         }
         
-        // Lines 1 & 3 Updates
         self.currentIntensityDescription = "Grid Carbon output: \(currentIndexStr)"
         self.currentNumericDescription = "Current carbon intensity: \(currentValue) gCO₂/kWh"
         
-        // Line 2 Update (Forecast)
         if let change = nextChange {
             let nextLevel = levelMap[change.intensity.index] ?? 3
-            let direction = nextLevel > currentLevel ? "rising" : "dropping" // Updated "falling" to "dropping" based on your example
+            let direction = nextLevel > currentLevel ? "rising" : "dropping"
             
             let parser = DateFormatter()
             parser.dateFormat = "yyyy-MM-dd'T'HH:mm'Z'"
@@ -188,7 +195,73 @@ class CarbonIntensityManager: ObservableObject {
             sendNotification()
         }
     }
+    
+    // MARK: - Update Checking
+    func checkForUpdates(manual: Bool) {
+        let owner = "dmarts"
+        let repo = "carboniser"
+        let urlString = "https://api.github.com/repos/\(owner)/\(repo)/releases/latest"
+        guard let url = URL(string: urlString) else { return }
+        
+        URLSession.shared.dataTask(with: url) { data, _, _ in
+            guard let data = data else {
+                if manual { DispatchQueue.main.async { self.showAlert(title: "Update Check Failed", message: "Could not connect to GitHub.") } }
+                return
+            }
+            
+            do {
+                let release = try JSONDecoder().decode(GitHubRelease.self, from: data)
+                
+                // Strip the "v" from the GitHub tag (e.g., "v1.1" becomes "1.1")
+                let latestVersion = release.tag_name.replacingOccurrences(of: "v", with: "")
+                
+                // Get the current version from Xcode's target settings
+                let currentVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
+                
+                DispatchQueue.main.async {
+                    // Compare versions numerically (so 1.10 is recognized as newer than 1.9)
+                    if latestVersion.compare(currentVersion, options: .numeric) == .orderedDescending {
+                        self.showUpdateAlert(latestVersion: latestVersion, releaseURL: release.html_url)
+                    } else if manual {
+                        self.showAlert(title: "Up to Date", message: "You are running the latest version (\(currentVersion)).")
+                    }
+                }
+            } catch {
+                print("GitHub API decode error: \(error)")
+                if manual { DispatchQueue.main.async { self.showAlert(title: "Update Check Failed", message: "Could not read release data.") } }
+            }
+        }.resume()
+    }
+    
+    private func showUpdateAlert(latestVersion: String, releaseURL: String) {
+        let alert = NSAlert()
+        alert.messageText = "Update Available!"
+        alert.informativeText = "Version \(latestVersion) of Carboniser is available on GitHub. Would you like to download it now?"
+        alert.alertStyle = .informational
+        alert.addButton(withTitle: "Download")
+        alert.addButton(withTitle: "Cancel")
+        
+        // Bring the alert to the front
+        NSApp.activate(ignoringOtherApps: true)
+        
+        if alert.runModal() == .alertFirstButtonReturn {
+            if let url = URL(string: releaseURL) {
+                NSWorkspace.shared.open(url)
+            }
+        }
+    }
+    
+    private func showAlert(title: String, message: String) {
+        let alert = NSAlert()
+        alert.messageText = title
+        alert.informativeText = message
+        alert.alertStyle = .informational
+        alert.addButton(withTitle: "OK")
+        NSApp.activate(ignoringOtherApps: true)
+        alert.runModal()
+    }
 
+    // MARK: - Debug
     func forceTestConditions() {
         self.currentIndex = "high"
         self.currentIntensityDescription = "Grid Carbon output: high"

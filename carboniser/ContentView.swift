@@ -56,7 +56,11 @@ struct ContentView: View {
             Divider()
             
             Toggle("Launch at Login", isOn: $manager.launchAtLogin)
-                .toggleStyle(.checkbox)
+                            .toggleStyle(.checkbox)
+                        
+            Button("Check for Updates...") {
+                manager.checkForUpdates(manual: true)
+            }
             
             Button("Debug: Force Test Conditions") {
                 manager.forceTestConditions()
