@@ -1,8 +1,8 @@
 # carboniser (UK Carbon Intensity utility)
 
-<img width="300" height="338" alt="image" src="https://github.com/user-attachments/assets/99fecc40-b34d-4a54-a2ad-8acd3a4f2cc2" />
+<img width="327" height="365" alt="image" src="https://github.com/user-attachments/assets/4c246d2d-55fb-4a8e-bb63-e791157318a5" />
 
-## What is?
+## What is this?
 Carboniser is a simple macos app, inspired by a feature on [octopus.energy](https://octopus.energy/).  It runs in your status bar and tells you the current 'carbon intensity' in your UK region.  If conditions are met, it suggests you disconnect mains/grid power for a while - it does this if:
 - Your battery is quite full
 - You're currently connected to grid power
@@ -13,6 +13,9 @@ The logic is that if your battery is full, and you're plugged in, you could prob
 The data for this utility is provided by [NESO](https://www.neso.energy/about-neso/our-progress-towards-net-zero/carbon-intensity-dashboard) and [their API](https://carbonintensity.org.uk/).
 
 If you're generating or storing your own power at home (solar / battery) then this logic doesn't necessarily apply.  This widget can't tell whether you're charging your laptop battery from the grid, or from your home battery.
+
+### Using the information for other appliance
+The dialog will also tell you the next major change in the carbon intensity forecast for your region, e.g. 'getting less polluting in 3 hours'.  While the carbon 'saving' from deferring charging is small on a modern Mac device, you might also choose to bring forward or delay electricity consumption e.g. running a dishwasher.  A washing machine can use 0.5-1kWh per cycle, so deferring a cycle from CI=250g to CI=100g could save up to 150g.  Over a year this could save the equivalent of ~200 miles of driving for each household using the app.
 
 ## How?
 ### Install
